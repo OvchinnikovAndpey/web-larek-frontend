@@ -1,4 +1,10 @@
 
+//Данные получаемые при запросе списка продуктов
+export interface IProductData {
+    total: number
+    items: IProduct[]
+}
+
 // Интерфейс данных карточек продукта выведенных на стартовой странице при загрузке
 
 interface IProduct {
@@ -78,5 +84,4 @@ interface IOrderForm {
     email: string;
     address: string;
     payment: string;
-
 }
