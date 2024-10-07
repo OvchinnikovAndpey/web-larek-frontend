@@ -90,7 +90,7 @@ interface IAppState {
 }
 ```
 ### Описание поля заказанных товаров
-
+```
 interface IOrder {
     items: string[]; //Массив id товаров в корзине
     orderAmount: number;
@@ -100,7 +100,7 @@ interface IOrder {
     phoneNumber: string;
 
 }
-
+```
 ### Описание для валидции форм ввода данных для заказа 
 
 ```
