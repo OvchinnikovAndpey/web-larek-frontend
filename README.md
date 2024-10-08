@@ -69,46 +69,40 @@ export interface IProductData {
 ```
 interface IAppState {
     
-    productStore: Product[];
-    basket: Product[];
-    order: IOrder;
+    productStore: IProduct[];
+    basket: IProduct[];  
+    order: IOrder; 
     formErrors: FormErrors;
-    
+    selectedModalProduct: IProduct; 
+
     // Методы:
 
-    addBasket: (value: Product): void; 
+    addBasket: (value: IProduct): void; 
     deleteBasket (id: string): void;
     clearBasket(): void; 
     getTotalBasket(): number; 
     getTotalBasketPrice(): number; 
     getItems(): void; 
     setOrderField(field: keyof IOrderForm, value: string): void;
-    validateContact(): boolean; 
+    validateContact(): boolean;
     validateOrder(): boolean; 
-    clearOrder(); boolean;
+    clearOrder(): boolean;
+    getBasketItems(): IProduct[]; 
+    hasProductInBasket(products: IProduct ): boolean; 
+    getUserData(): IOrder; 
+    setSelectedModalProduct(selectedProduct: IProduct);
 
 }
 ```
 ### Описание поля заказанных товаров
 ```
 interface IOrder {
-    items: string[]; //Массив id товаров в корзине
-    orderAmount: number;
+
     payment: string;
-    address: string;
-    email: string;
+    address: string; 
+    email: string; 
     phoneNumber: string;
 
-}
-```
-### Описание для валидции форм ввода данных для заказа 
-
-```
-interface IOrderForm {
-    phoneNumber: string;
-    email: string;
-    address: string;
-    payment: string;
 }
 ```
 

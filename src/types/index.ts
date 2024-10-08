@@ -31,13 +31,15 @@ interface IProduct {
 
 interface IAppState {
     
-    protected productStore: IProduct[]; // Массив карточек товара
+    productStore: IProduct[]; // Массив карточек товара
 
-    protected basket: IProduct[]; // Массив корзины заказа пользователя 
+    basket: IProduct[]; // Массив корзины заказа пользователя 
 
-    protected order: IOrder; // Инфо о заказе при добавлении в корзину
+    order: IOrder; // Инфо о заказе при добавлении в корзину
 
-    protected formErrors: FormErrors; // Ошибки заполнения форм
+    formErrors: FormErrors; // Ошибки заполнения форм
+
+    selectedModalProduct: IProduct; //для хранения выбранного товара. Это позволит отображать выбранный товар в модальном окне при его открытии.
 
     // Методы:
 
@@ -61,11 +63,19 @@ interface IAppState {
 
     clearOrder(): boolean; //Очистка заказа после оформления заказа
 
+    getBasketItems(): IProduct[]; //возвращает массив товаров, находящихся в корзине.
+    
+    hasProductInBasket(products: IProduct ): boolean; // проверяет, есть ли товар с указанным идентификатором в корзине, и возвращает логическое значение (true или false).
+    
+    getUserData(): IOrder; //получает все данные пользователя.
+    
+    setSelectedModalProduct(selectedProduct: IProduct); //устанавливает выбранный для открытия в модальном окне товар. Здесь selectedProduct — это объект типа IProduct, который будет выбран для отображения в модалке.
+    
+
 }
 
 // Интерфейс, с помощью которого описываем поля заказанных товаров
 interface IOrder {
-    items: IProduct[]; //Массив id товаров в корзине
 
     payment: string; //Способ оплаты
 
@@ -75,12 +85,4 @@ interface IOrder {
 
     phoneNumber: string; //Номер телефона
 
-}
-
-//Интерфейс формы заказа
-interface IOrderForm {
-    phoneNumber: string;
-    email: string;
-    address: string;
-    payment: string;
 }
