@@ -82,12 +82,11 @@ interface IAppState {
     clearBasket(): void; 
     getTotalBasket(): number; 
     getTotalBasketPrice(): number; 
-    getItems(): void; 
+    getItems(); 
     setOrderField(field: keyof IOrderForm, value: string): void;
     validateContact(): boolean;
     validateOrder(): boolean; 
     clearOrder(): boolean;
-    getBasketItems(): IProduct[]; 
     hasProductInBasket(products: IProduct ): boolean; 
     getUserData(): IOrder; 
     setSelectedModalProduct(selectedProduct: IProduct);
@@ -129,3 +128,89 @@ interface IOrder {
 - `trigger` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие   
 
 ### Слой данных
+
+#### Класс ```AppState```
+Явлетя моделью данных всего приложения в целом. Данный класс содержит в себе все основные группы данных страницы и методы работы с ними.
+
+Тут находятся данные различных частей приложения, таких как:
+
+- список товаров
+- корзина, в которую пользователь добавляет товар
+- превью карточек товара
+- форма оформления заказа
+
+Расширяется базовым абстрактным классом ```Model<T>``` по интерфейсу ```IAppState```.
+
+```
+interface IAppState {
+    productStore: IProduct[];
+    basket: IProduct[];  
+    order: IOrder; 
+    formErrors: FormErrors;
+    selectedModalProduct: IProduct; 
+    addBasket: (value: IProduct): void; 
+    deleteBasket (id: string): void;
+    clearBasket(): void; 
+    getTotalBasket(): number; 
+    getTotalBasketPrice(): number; 
+    getItems(); 
+    setOrderField(field: keyof IOrderForm, value: string): void;
+    validateContact(): boolean;
+    validateOrder(): boolean; 
+    clearOrder(): boolean;
+    hasProductInBasket(products: IProduct ): boolean; 
+    getUserData(): IOrder; 
+    setSelectedModalProduct(selectedProduct: IProduct);
+}
+```
+
+#### Поля
+
+- productStore: массив объектов типа IProduct.
+- basket: массив объектов типа IProduct, представляющий содержимое корзины.
+- order: объект типа IOrder, содержащий информацию о заказе.
+- formErrors: объект типа FormErrors, содержащий ошибки формы.
+- selectedModalProduct: выбранный для отображения в модальном окне товар.
+
+#### Методы
+
+- addBasket: добавляет продукт в корзину.
+- deleteBasket: удаляет продукт из корзины по идентификатору.
+- clearBasket: очищает корзину.
+- getTotalBasket: возвращает общее количество товаров в корзине.
+- getTotalBacketPrice: возвращает общую стоимость товаров в корзине.
+- getItems: получает список товаров.
+- setOrderField: устанавливает значение поля заказа.
+- validateContact: проверяет корректность контактных данных.
+- validateOrder: проверяет правильность оформления заказа.
+- clearOrder: очищает данные заказа.
+- hasProductInBasket: проверяет наличие товара в корзине.
+- getUserData: получает все данные пользователя.
+- setSelectedModalProduct: устанавливает выбранный для открытия в модальном окне товар.
+
+#### Класс ```Product```
+
+Является моделью храния данных товара: 
+
+- id карточки
+- Название карточки
+- категория товара
+- описание товара в карточке
+- ссылка на картинку
+- Стоимость товара (карточки)
+
+Расширяется базовым абстрактным классом ```Model<T>``` по интерфейсу ```IProductItem```
+
+```
+interface IProduct {
+    id: string; 
+    title: string; 
+    category: string; 
+    description: string; 
+    image: string; 
+    price: number | null; 
+}
+```
+
+### Компоненты представления (View)
+

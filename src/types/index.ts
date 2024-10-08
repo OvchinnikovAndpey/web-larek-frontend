@@ -53,7 +53,7 @@ interface IAppState {
 
     getTotalBasketPrice(): number; //Метод получения общей стоимости карточек в корзине
 
-    getItems(): void; //Метод получения id товаров к корзине
+    getItems(): IProduct[]; //Метод получения id товаров к корзине
 
     setOrderField(field: keyof IOrderForm, value: string): void;
 
@@ -62,8 +62,6 @@ interface IAppState {
     validateOrder(): boolean; // Валидация формы заказов
 
     clearOrder(): boolean; //Очистка заказа после оформления заказа
-
-    getBasketItems(): IProduct[]; //возвращает массив товаров, находящихся в корзине.
     
     hasProductInBasket(products: IProduct ): boolean; // проверяет, есть ли товар с указанным идентификатором в корзине, и возвращает логическое значение (true или false).
     
