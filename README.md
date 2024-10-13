@@ -88,22 +88,43 @@ interface IAppState {
     validateOrder(): boolean; 
     clearOrder(): boolean;
     hasProductInBasket(products: IProduct ): boolean; 
-    getUserData(): IOrder; 
-    setSelectedModalProduct(selectedProduct: IProduct);
-
 }
 ```
-### Описание поля заказанных товаров
+### Описание данных пользователя
 ```
 interface IOrder {
 
-    payment: string;
-    address: string; 
-    email: string; 
-    phoneNumber: string;
+    payment: string; //Способ оплаты
+
+    address: string; //Адрес доставки
+    
+    email: string; //Электронная почта
+
+    phoneNumber: string; //Номер телефона
 
 }
+
+interface IOrderForm {
+    email: string;
+
+    phone: string;
+
+    adress: string;
+}
 ```
+
+### Корзина с количеством заказа 
+
+```
+interface IOrderData {
+    items: IProduct[];
+    totalamount: number;
+}
+```
+
+### Тип, по которому будет определяться, какую ошибку вывести в конкретную форму
+
+```type FormErrors = Partial<Record<keyof IOrderForm, string>>;```
 
 ## Архитектура приложения
 
