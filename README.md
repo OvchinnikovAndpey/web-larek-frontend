@@ -70,7 +70,7 @@ export interface IProductData {
 interface IAppState {
     
     productStore: IProduct[];
-    
+
     addBasket: (value: IProduct): void; 
     deleteBasket (id: string): void;
     clearBasket(): void; 
@@ -88,13 +88,13 @@ interface IAppState {
 ```
 interface IOrder {
 
-    payment: string; //Способ оплаты
+    payment: string;
 
-    address: string; //Адрес доставки
+    address: string;
     
-    email: string; //Электронная почта
+    email: string;
 
-    phoneNumber: string; //Номер телефона
+    phoneNumber: string;
 
 }
 
@@ -302,7 +302,7 @@ interface IOrderData {
 
 #### Класс ```Order```
 
-Класс Order отвечает за отображение выбора способа оплаты и адреса покупателя в модальном окне. Он расширяет класс Form по интерфейсу ```IOrder```.
+Класс ```Order``` отвечает за отображение выбора способа оплаты и адреса покупателя в модальном окне. Он расширяет класс Form по интерфейсу ```IOrder```.
 
 Конструктор класса ```Order(container: HTMLElement, protected events: IEvents)```
 
