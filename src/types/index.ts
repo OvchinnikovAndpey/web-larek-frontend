@@ -5,6 +5,7 @@ export interface IProductData {
     items: IProduct[]
 }
 
+// Тип, по которому будет определяться, какую ошибку вывести в конкретную форму
 type FormErrors = Partial<Record<keyof IOrderForm, string>>;
 
 // Интерфейс данных карточек продукта выведенных на стартовой странице при загрузке
@@ -33,29 +34,21 @@ interface IAppState {
     
     productStore: IProduct[]; // Массив карточек товара
 
-    basket: IProduct[]; // Массив корзины заказа пользователя 
-
-    order: IOrder; // Инфо о заказе при добавлении в корзину
-
-    formErrors: FormErrors; // Ошибки заполнения форм
-
-    selectedModalProduct: IProduct; //для хранения выбранного товара. Это позволит отображать выбранный товар в модальном окне при его открытии.
-
     // Методы:
 
-    addBasket: (value: IProduct): void; //Метод добавления товара в корзину
+    addBasket: (value: IProduct): void; //Метод добавления товара в корзину  
 
-    deleteBasket (id: string): void; //Метод удаление отдельного товара из корзины
+    deleteBasket (): void; //Метод удаление отдельного товара из корзины  
 
-    clearBasket(): void; //Метод очистки корзины заказа (удаления всех карточек товара)
+    clearBasket(): void; //Метод очистки корзины заказа (удаления всех карточек товара) 
 
     getTotalBasket(): number; //Метод получения общего количества товара в корзине
 
     getTotalBasketPrice(): number; //Метод получения общей стоимости карточек в корзине
 
-    getItems(): IProduct[]; //Метод получения id товаров к корзине
+    getItems(): void; //Метод получения id товаров к корзине
 
-    setOrderField(field: keyof IOrderForm, value: string): void;
+    setOrderField(field: keyof IOrderForm, value: string): void; //Метод заполнения полей ввода: мыло, телефон, адресс, способ оплаты
 
     validateContact(): boolean; //Валидация формы контактов
 
@@ -65,14 +58,9 @@ interface IAppState {
     
     hasProductInBasket(products: IProduct ): boolean; // проверяет, есть ли товар с указанным идентификатором в корзине, и возвращает логическое значение (true или false).
     
-    getUserData(): IOrder; //получает все данные пользователя.
-    
-    setSelectedModalProduct(selectedProduct: IProduct); //устанавливает выбранный для открытия в модальном окне товар. Здесь selectedProduct — это объект типа IProduct, который будет выбран для отображения в модалке.
-    
-
 }
 
-// Интерфейс, с помощью которого описываем поля заказанных товаров
+// Данные о пользователе
 interface IOrder {
 
     payment: string; //Способ оплаты
@@ -83,4 +71,19 @@ interface IOrder {
 
     phoneNumber: string; //Номер телефона
 
+}
+
+interface IOrderForm {
+    email: string;
+
+    phone: string;
+
+    adress: string;
+}
+
+// Корзина с количеством заказа
+
+interface IOrderData {
+    items: IProduct[];
+    totalamount: number;
 }
