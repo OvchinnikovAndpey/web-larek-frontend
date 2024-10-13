@@ -70,13 +70,7 @@ export interface IProductData {
 interface IAppState {
     
     productStore: IProduct[];
-    basket: IProduct[];  
-    order: IOrder; 
-    formErrors: FormErrors;
-    selectedModalProduct: IProduct; 
-
-    // Методы:
-
+    
     addBasket: (value: IProduct): void; 
     deleteBasket (id: string): void;
     clearBasket(): void; 
