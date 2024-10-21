@@ -87,3 +87,8 @@ export interface IOrderData {
     items: IProduct[];
     totalamount: number;
 }
+
+export interface IOrderResponse {
+    id: string
+  }
+  
