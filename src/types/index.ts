@@ -6,11 +6,11 @@ export interface IProductData {
 }
 
 // Тип, по которому будет определяться, какую ошибку вывести в конкретную форму
-type FormErrors = Partial<Record<keyof IOrderForm, string>>;
+export type FormErrors = Partial<Record<keyof IUser, string>>;
 
 // Интерфейс данных карточек продукта выведенных на стартовой странице при загрузке
 
-interface IProduct {
+export interface IProduct {
     
     id: string; // id карточки
 
@@ -30,13 +30,13 @@ interface IProduct {
 // Интерфейс имеет методы для хранения карточек, состояние заказа пользователя, ошибки валидации и состояние корзины
 // Подробное описание методов указано непосредственно в интерфейсе в виде комментариев
 
-interface IAppState {
+export interface IAppState {
     
     productStore: IProduct[]; // Массив карточек товара
 
     // Методы:
 
-    addBasket: (value: IProduct): void; //Метод добавления товара в корзину  
+    addBasket (value: IProduct): void; //Метод добавления товара в корзину  
 
     deleteBasket (): void; //Метод удаление отдельного товара из корзины  
 
@@ -61,7 +61,7 @@ interface IAppState {
 }
 
 // Данные о пользователе
-interface IOrder {
+export interface IUser {
 
     payment: string; //Способ оплаты
 
@@ -73,7 +73,7 @@ interface IOrder {
 
 }
 
-interface IOrderForm {
+export interface IOrderForm {
     email: string;
 
     phone: string;
@@ -83,7 +83,7 @@ interface IOrderForm {
 
 // Корзина с количеством заказа
 
-interface IOrderData {
+export interface IOrderData {
     items: IProduct[];
     totalamount: number;
 }

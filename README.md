@@ -56,14 +56,6 @@ interface IProduct {
     price: number | null;
 }
 ```
-### Модель храниения списка карточек
-
-```
-export interface IProductData {
-    total: number
-    items: IProduct[]
-  }
-```
 
 ### Описание данных пользователя
 ```
@@ -78,24 +70,8 @@ interface IOrder {
     phoneNumber: string;
 
 }
-
-interface IOrderForm {
-    email: string;
-
-    phone: string;
-
-    adress: string;
-}
 ```
 
-### Корзина с количеством заказа 
-
-```
-interface IOrderData {
-    items: IProduct[];
-    totalamount: number;
-}
-```
 
 ## Архитектура приложения
 
@@ -172,9 +148,12 @@ interface IOrderData {
 
 - ```addBasket```: добавляет продукт в корзину.
 - ```deleteBasket```: удаляет продукт из корзины по идентификатору.
+- ```getItemById```: возвращает товар по его id
+- ```getBasket```: возвращает массив товаров в корзине
+- ```setItems```: сохранение массива товаров
 - ```clearBasket```: очищает корзину.
-- ```getTotalBasket```: возвращает общее количество товаров в корзине.
-- ```getTotalBacketPrice```: возвращает общую стоимость товаров в корзине.
+- ```getCountBasket```: возвращает общее количество товаров в корзине.
+- ```getTotalBasketPrice```: возвращает общую стоимость товаров в корзине.
 - ```getItems```: получает список товаров.
 - ```setOrderField```: устанавливает значение поля заказа.
 - ```validateContact```: проверяет корректность контактных данных.
