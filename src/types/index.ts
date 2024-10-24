@@ -92,3 +92,8 @@ export interface IOrderResponse {
     id: string
   }
   
+  export interface IForm {
+    valid: boolean
+    errors: string[]
+    
+  }

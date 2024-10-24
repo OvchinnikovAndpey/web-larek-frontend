@@ -1,6 +1,6 @@
-import { IProduct, IUser, FormErrors } from '../types';
-import { Model } from './base/Model';
-import { IEvents } from './base/events';
+import { IProduct, IUser, FormErrors } from '../../types';
+import { Model } from '../base/Model';
+import { IEvents } from '../base/events';
 
 export class AppState extends Model<IProduct> {
 	protected items: IProduct[] = [];

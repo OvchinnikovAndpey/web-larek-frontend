@@ -1,4 +1,4 @@
-import { AppState } from './components/AppState';
+import { AppState } from './components/common/AppState';
 import './scss/styles.scss';
 import { IProduct } from './types';
 import { EventEmitter } from './components/base/events'
