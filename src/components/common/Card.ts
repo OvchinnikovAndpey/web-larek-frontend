@@ -6,7 +6,7 @@ interface ICardAction {
   onClick: (event: MouseEvent) => void
 }
 
-//Общий класс, он же будет использоваться для корзины
+// Класс Card является базовым классом для карточек, который наследуется от класса Component и имеет тип параметра IProduct.
 export class Card extends Component<IProduct> {
   _price: HTMLElement
   _title: HTMLElement
@@ -14,9 +14,8 @@ export class Card extends Component<IProduct> {
 
     constructor(container: HTMLElement, action?: ICardAction) {
     super(container)
-
-    this._price = ensureElement<HTMLElement>('.card__price', container)
     this._title = ensureElement<HTMLElement>('.card__title', container)
+    this._price = ensureElement<HTMLElement>('.card__price', container)
     this.button = container.querySelector('.card__button')
 
     if(action?.onClick) {
@@ -44,7 +43,7 @@ export class Card extends Component<IProduct> {
   }
 }
 
-//Карточка для каталога на главной
+//Класс CardOnPage наследуется от класса Card и представляет собой карточку, которая отображается на странице
 export class CardOnPage extends Card {
 
   _image: HTMLImageElement
@@ -67,8 +66,8 @@ export class CardOnPage extends Card {
 
 }
 
-//Карточка для превью
-export class CardPreview extends CardOnPage {
+//Класс CardPreview наследуется от класса CardOnPage и представляет собой карточку с предпросмотром.
+export class CardInfo extends CardOnPage {
   _description: HTMLElement
 
   constructor(container: HTMLElement, action?: ICardAction) {
