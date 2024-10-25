@@ -1,4 +1,3 @@
-
 import { IEvents } from "../base/events";
 import { IForm } from "../../types";
 import { Component } from "../base/Component";

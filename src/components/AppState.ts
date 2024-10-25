@@ -1,6 +1,6 @@
-import { IProduct, IUser, FormErrors } from '../../types';
-import { Model } from '../base/Model';
-import { IEvents } from '../base/events';
+import { IProduct, IUser, FormErrors } from '../types';
+import { IEvents } from './base/events';
+import { Model } from './base/Model';
 
 export class AppState extends Model<IProduct> {
 	protected items: IProduct[] = [];
@@ -20,7 +20,7 @@ export class AppState extends Model<IProduct> {
 		};
 	}
 
-	addCards(cards: IProduct[]): void {
+	productStore(cards: IProduct[]) {
 		this.items = cards;
 		this.events.emit('items:changed', { items: this.items });
 	}
