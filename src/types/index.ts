@@ -6,8 +6,8 @@ export type PaymentMethod = 'cash' | 'online' | null;
 
 //Данные получаемые при запросе списка продуктов
 export interface IProductData {
-	total: number;   // общее кол-во карточек
 	items: IProduct[]; // массив карточек
+	total: number;   // общее кол-во карточек
 }
 
 // Интерфейс данных карточек продукта выведенных на стартовой странице при загрузке

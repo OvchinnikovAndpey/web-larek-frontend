@@ -32,6 +32,7 @@ export class Api {
         }).then(this.handleResponse);
     }
 
+
     post(uri: string, data: object, method: ApiPostMethods = 'POST') {
         return fetch(this.baseUrl + uri, {
             ...this.options,
@@ -40,3 +41,5 @@ export class Api {
         }).then(this.handleResponse);
     }
 }
+
+

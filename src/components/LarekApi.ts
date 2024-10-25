@@ -4,8 +4,9 @@ import { IProduct, IOrderResponse } from '../types';
 export class LarekApi extends Api {
 	readonly cdn: string;
 
-	constructor(cdn: string, baseUrl: string, options?: RequestInit) {
+	constructor(baseUrl: string, cdn: string, options?: RequestInit) {
 		super(baseUrl, options);
+		// console.log('baseUrl:', baseUrl);
 		this.cdn = cdn;
 	}
 
