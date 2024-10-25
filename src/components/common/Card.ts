@@ -66,7 +66,7 @@ export class CardOnPage extends Card {
 
 }
 
-//Класс CardPreview наследуется от класса CardOnPage и представляет собой карточку с предпросмотром.
+//Класс CardInfo наследуется от класса CardOnPage и представляет собой карточку с предпросмотром.
 export class CardInfo extends CardOnPage {
   _description: HTMLElement
 
