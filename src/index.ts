@@ -59,55 +59,20 @@ const order = new Order(
 
 //Бизнес-логика приложения
 
-api.getProducts()
-  .then(appModel.productStore.bind(appModel))
-  .catch(err => {
-    console.log(err)
-  })
+
 
 // Получение списка карточек
-// api.getProducts()
-//     .then((data) => {
-//         if (data) {
-//             appModel.productStore(data);
-//         } else {
-//             console.log('Ошибка получения карточек: данные не были получены');
-//         }
-//     })
-//     .catch((err) => console.log('Ошибка получения карточек:', err));
+api.getProducts()
+    .then((data) => {
+        if (data) {
+            appModel.productStore(data);
+        } else {
+            console.log('Ошибка получения карточек: данные не были получены');
+        }
+    })
+    .catch((err) => console.log('Ошибка получения карточек:', err));
 
-// api.getProducts()
-//   .then((data) => {
-//     console.log('Ответ от сервера:', data);
-//     console.log('Тип ответа:', typeof data);
-//     if (typeof data === 'object' && data !== null) {
-//       console.log('Данные являются объектом');
-//       console.log('Свойства объекта:', Object.keys(data));
-//     } else {
-//       console.log('Данные не являются объектом');
-//     }
-//   })
-//   .catch((error) => {
-//     console.error('Ошибка:', error);
-//   });
 
-	
-// console.log(appModel.getItems());
-
-events.on('items:changed', () => {
-	appModelPage.catalog = appModel.getItems().map((item) => {
-		const card = new CardOnPage(cloneTemplate(catalogCardTemplate), {
-			onClick: () => events.emit('card:selected', item),
-		});
-		return card.render({
-			id: item.id,
-			title: item.title,
-			price: item.price,
-			category: item.category,
-			image: item.image,
-		});
-	});
-});
 
 
 
