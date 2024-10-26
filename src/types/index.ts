@@ -81,7 +81,7 @@ export interface IUser {
 
 	email?: string; //Электронная почта
 
-	phoneNumber?: string; //Номер телефона
+	phone?: string; //Номер телефона
 
 	total?: string | number; //Общая стоимость заказа
 }
@@ -103,7 +103,7 @@ export interface IOrderData {
 
 // Данные о заказе
 export interface IOrderResponse extends IUser {
-	id: string[]; // Идентификатор заказа
+	items: string[]; // Идентификатор заказа
 }
 
 // Интерфейс для валидации форм

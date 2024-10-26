@@ -16,7 +16,7 @@ export class AppState extends Model<IProduct> {
 			payment: '',
 			address: '',
 			email: '',
-			phoneNumber: '',
+			phone: '',
 		};
 	}
 
@@ -87,8 +87,8 @@ export class AppState extends Model<IProduct> {
 		if (!this.userData.email) {
 			errors.email = 'Необходимо указать email';
 		}
-		if (!this.userData.phoneNumber) {
-			errors.phoneNumber = 'Необходимо указать номер телефона';
+		if (!this.userData.phone) {
+			errors.phone = 'Необходимо указать номер телефона';
 		}
 		this.formErrors = errors;
 		this.events.emit('input:error', this.formErrors);
@@ -100,7 +100,7 @@ export class AppState extends Model<IProduct> {
 			payment: '',
 			address: '',
 			email: '',
-			phoneNumber: '',
+			phone: '',
 		};
 		this.events.emit('input:error', this.formErrors);
 	}

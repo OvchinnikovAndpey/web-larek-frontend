@@ -216,13 +216,13 @@ events.on('basket:toOrder', () => {
 
 // Изменение данных
 events.on('input:error', (errors: Partial<IUser>) => {
-	const { payment, address, email, phoneNumber } = errors;
+	const { payment, address, email, phone } = errors;
 	order.valid = !payment && !address;
-	contacts.valid = !email && !phoneNumber;
+	contacts.valid = !email && !phone;
 	order.errors = Object.values({ address, payment })
 		.filter((i) => !!i)
 		.join('; ');
-	contacts.errors = Object.values({ phoneNumber, email })
+	contacts.errors = Object.values({ phone, email })
 		.filter((i) => !!i)
 		.join('; ');
 	order.payment = appModel.getField();
@@ -259,9 +259,9 @@ events.on('contacts:submit', () => {
 		payment: orderData.payment,
 		address: orderData.address,
 		email: orderData.email,
-		phoneNumber: orderData.phoneNumber,
+		phone: orderData.phone,
 		total: orderData.total,
-		id: items,
+		items: items,
 	};
 	api.postOrder(payload).then((result) => {
 		events.emit('order:success', result);
