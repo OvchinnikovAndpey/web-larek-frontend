@@ -5,7 +5,7 @@ import { Model } from './base/Model';
 export class AppState extends Model<IProduct> {
 	protected items: IProduct[] = [];
 	protected basket: IProduct[] = [];
-	protected userData: IUser = {} ;
+	protected userData: IUser = {};
 	protected formErrors: FormErrors = {};
 	protected preview: string;
 	// protected events = new EventTarget();
@@ -33,10 +33,10 @@ export class AppState extends Model<IProduct> {
 		this.preview = card.id;
 		this.events.emit('prepreview:change', card);
 	}
-// Новый метод получения списка ID товаров в корзине
+	// Новый метод получения списка ID товаров в корзине
 	getBasketId() {
-		return this.basket.map(item => item.id)
-	  }
+		return this.basket.map((item) => item.id);
+	}
 
 	addBasket(id: string): void {
 		this.basket.push(this.getItemById(id));
@@ -101,11 +101,11 @@ export class AppState extends Model<IProduct> {
 		if (!this.userData.payment) {
 			errors.payment = 'Необходимо указать способ оплаты';
 		}
-		if(!this.userData.email){
-			errors.email = 'Необходимо указать email'
+		if (!this.userData.email) {
+			errors.email = 'Необходимо указать email';
 		}
-		if(!this.userData.phoneNumber){
-			errors.phoneNumber = 'Необходимо указать номер телефона'
+		if (!this.userData.phoneNumber) {
+			errors.phoneNumber = 'Необходимо указать номер телефона';
 		}
 		this.formErrors = errors;
 		this.events.emit('input:error', this.formErrors);
@@ -126,17 +126,15 @@ export class AppState extends Model<IProduct> {
 		return this.formErrors;
 	}
 
-	
 	getField() {
-		return this.userData.payment
+		return this.userData.payment;
 	}
 
-//Метод для заполнения полей email, phone, address, payment
-addOrderField(field: keyof IUser, value: string) {
-    this.userData[field] = value
-    this.validateContact()
-
-  }
+	//Метод для заполнения полей email, phone, address, payment
+	addOrderField(field: keyof IUser, value: string) {
+		this.userData[field] = value;
+		this.validateContact();
+	}
 
 	hasProductInBasket(id: string): boolean {
 		return this.basket.some((item) => item.id === id);

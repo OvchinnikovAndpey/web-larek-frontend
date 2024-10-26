@@ -220,14 +220,13 @@ events.on('input:error', (errors: Partial<IUser>) => {
 	order.valid = !payment && !address;
 	contacts.valid = !email && !phoneNumber;
 	order.errors = Object.values({ address, payment })
-		.filter(i => !!i)
+		.filter((i) => !!i)
 		.join('; ');
 	contacts.errors = Object.values({ phoneNumber, email })
-		.filter(i => !!i)
+		.filter((i) => !!i)
 		.join('; ');
 	order.payment = appModel.getField();
 });
-
 
 // событие изменения полей
 events.on(
@@ -248,28 +247,46 @@ events.on('order:submit', () => {
 	});
 });
 
+// событие отправки формы
 events.on('contact:submit', () => {
 	const orderData = appModel.getUserData();
 	orderData.total = appModel.getTotalBasketPrice();
 
-	const items = appModel.getBasketId()
+	const items = appModel.getBasketId();
 
 	const payload: IOrderResponse = {
 		payment: orderData.payment,
-		address: orderData.address,	
+		address: orderData.address,
 		email: orderData.email,
 		phoneNumber: orderData.phoneNumber,
 		total: orderData.total,
-		id: items
-	}					
-	api.postOrder(payload)
-	.then((result) => {
-	  console.log(payload)
-	  events.emit('order:success', result)
-	  appModel.clearBasket()
-	  appModelPage.counter = appModel.getCountBasket()
-	})
-})
+		id: items,
+	};
+	api.postOrder(payload).then((result) => {
+		events.emit('order:success', result);
+		appModel.clearBasket();
+		appModelPage.counter = appModel.getCountBasket();
+	});
+});
+
+events.on('order:success', (result: ISucces) => {
+	const success = new Success(cloneTemplate(successModalTemplate), {
+		onClick: () => {
+			appModalPage.close();
+			order.disableButtons();
+		},
+	});
+
+	appModalPage.render({
+		content: success.render({
+			total: appModel.getTotalBasketPrice(),
+		}),
+	});
+});
+
+
+
+
 
 
 
