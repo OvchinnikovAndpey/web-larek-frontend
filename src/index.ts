@@ -14,11 +14,15 @@ import { ISucces, Success } from './components/common/Success';
 import { API_URL, CDN_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 
-import { IUser, IProduct, IOrderResponse } from './types';
+import { IUser, IProduct, IOrderResponse, CategoryType } from './types';
 
+// События
 const events = new EventEmitter();
+
+// API
 const api = new LarekApi(API_URL, CDN_URL);
 
+// Состояние приложения
 events.onAll(({ eventName, data }) => {
 	console.log(eventName, data);
 });
@@ -29,8 +33,7 @@ events.onAll(({ eventName, data }) => {
 // оформление заказа, ввод контактной информации и получение подтверждения успешного заказа.
 
 const catalogCardTemplate = ensureElement<HTMLTemplateElement>('#card-catalog'); //Каталог карточек
-const productPreviewTemplate =
-	ensureElement<HTMLTemplateElement>('#card-preview'); //Предпросмотр продукта
+const productPreviewTemplate =ensureElement<HTMLTemplateElement>('#card-preview'); //Предпросмотр продукта
 const basketItemTemplate = ensureElement<HTMLTemplateElement>('#card-basket'); //Элементы корзины
 const basketModalTemplate = ensureElement<HTMLTemplateElement>('#basket'); //Модальное окно корзины
 const orderModalTemplate = ensureElement<HTMLTemplateElement>('#order'); //Модальное окно заказа
@@ -87,10 +90,20 @@ events.on('items:changed', () => {
 			id: item.id,
 			title: item.title,
 			price: item.price,
-			category: item.category,
+			category: item.category as CategoryType,
 			image: item.image,
 		});
 	});
+});
+
+// Блокировка всей страницы, когда открыта модалка предпросмотра карточек и оформления заказа.
+events.on('modal:open', () => {
+	appModelPage.locked = true;
+});
+
+// Снятие блокировки всей страницы, когда закрыта модалка предпросмотра карточек и оформления заказа.
+events.on('modal:close', () => {
+	appModelPage.locked = false;
 });
 
 //Событие Открытия предпросмотра карточек
@@ -118,7 +131,7 @@ events.on('prepreview:change', (item: IProduct) => {
 			id: item.id,
 			title: item.title,
 			price: item.price,
-			category: item.category,
+			category: item.category as CategoryType,
 			image: item.image,
 			description: item.description,
 			button: productInBasket ? 'Удалить из корзины' : 'В корзину',
@@ -166,7 +179,7 @@ events.on('basket:open', () => {
 events.on('basket:remove', (item: IProduct) => {
 	appModel.deleteBasket(item.id);
 	appModelPage.counter = appModel.getCountBasket();
-	let i=1
+	let i = 1;
 	const basketList = appModel.getBasket().map((item) => {
 		const card = new Card(cloneTemplate(basketItemTemplate), {
 			price: item.price,
@@ -184,17 +197,55 @@ events.on('basket:remove', (item: IProduct) => {
 			list: basketList,
 			total: appModel.getTotalBasketPrice(),
 		}),
-	})
-	
+	});
 	// console.log('корзина', appModel.getBasket());
 });
 
+// событие открытия оформления заказа
+events.on('basket:toOrder', () => {
+	appModalPage.render({
+		content: order.render({
+			valid: false,
+			errors: [],
+			address: '',
+			payment: null,
+		}),
+	});
+});
+
+events.on('error:changed', (errors: Partial<IUser>) => {
+	const { payment, address, email, phoneNumber } = errors;
+	order.valid = !payment && !address;
+	contacts.valid = !email && !phoneNumber;
+	order.errors = Object.values({ address, payment })
+		.filter((i) => !!i)
+		.join('; ');
+	contacts.errors = Object.values({ phoneNumber, email })
+		.filter((i) => !!i)
+		.join('; ');
+	order.payment = appModel.getField();
+});
 
 
+events.on(
+	'orderInput:change',
+	(data: { field: keyof IUser; value: string }) => {
+		appModel.setOrderField(data.field, data.value);
+		// console.log('appModel.userData', appModel.userData)
+	}
+);
 
 
-
-
+events.on('order:submit', () => {
+	appModalPage.render({
+	  content: contacts.render(
+		{
+		  valid: false,
+		  errors: []
+		}
+	  ),
+	})
+  })
 
 
 

@@ -1,6 +1,7 @@
-import { IProduct } from '../types';
+import { IProduct, CategoryType } from '../types';
 import { ensureElement } from '../utils/utils';
 import { Component } from './base/Component';
+import { categoryMap, CDN_URL } from "../utils/constants";
 
 export interface ICardAction {
 	onClick: (event: MouseEvent) => void;
@@ -72,8 +73,9 @@ export class CardOnPage extends Card {
 		this.setImage(this._image, value, this.title);
 	}
 
-	set category(value: string) {
+	set category(value: CategoryType) {
 		this.setText(this._category, value);
+		this.toggleClass(this._category, categoryMap[value], true);
 	}
 }
 

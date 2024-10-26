@@ -112,6 +112,10 @@ export class AppState extends Model<IProduct> {
 		return this.formErrors;
 	}
 
+	getField() {
+		return this.userData.payment
+	  }
+
 	hasProductInBasket(id: string): boolean {
 		return this.basket.some((item) => item.id === id);
 	}

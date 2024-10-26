@@ -4,6 +4,17 @@ export type FormErrors = Partial<Record<keyof IUser, string>>;
 // метод определения типа оплаты
 export type PaymentMethod = 'cash' | 'online' | null;
 
+export type CategoryType =
+	| 'другое'
+	| 'софт-скил'
+	| 'дополнительное'
+	| 'кнопка'
+	| 'хард-скил';
+
+export type CategoryMap = {
+	[Key in CategoryType]: string;
+};
+
 //Данные получаемые при запросе списка продуктов
 export interface IProductData {
 	items: IProduct[]; // массив карточек
