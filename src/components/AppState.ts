@@ -5,7 +5,7 @@ import { Model } from './base/Model';
 export class AppState extends Model<IProduct> {
 	protected items: IProduct[] = [];
 	protected basket: IProduct[] = [];
-	protected userData: IUser;
+	protected userData: IUser = {} ;
 	protected formErrors: FormErrors = {};
 	protected preview: string;
 	// protected events = new EventTarget();
@@ -74,26 +74,26 @@ export class AppState extends Model<IProduct> {
 		return this.basket.length;
 	}
 
-	setOrderField(field: keyof IUser, value: string): void {
-		this.userData[field] = value;
-	}
+	// setOrderField(field: keyof IUser, value: string): void {
+	// 	this.userData[field] = value;
+	// }
+
+	// validateContact(): boolean {
+	// 	const errors: typeof this.formErrors = {};
+
+	// 	if (!this.userData.email) {
+	// 		errors.email = 'Необходимо указать email';
+	// 	}
+
+	// 	if (!this.userData.phoneNumber) {
+	// 		errors.phoneNumber = 'Необходимо указать номер телефонf';
+	// 	}
+	// 	this.formErrors = errors;
+	// 	this.events.emit('input:error', this.formErrors);
+	// 	return Object.keys(errors).length === 0;
+	// }
 
 	validateContact(): boolean {
-		const errors: typeof this.formErrors = {};
-
-		if (!this.userData.email) {
-			errors.email = 'Необходимо указать email';
-		}
-
-		if (!this.userData.phoneNumber) {
-			errors.phoneNumber = 'Необходимо указать номер телефонf';
-		}
-		this.formErrors = errors;
-		this.events.emit('input:error', this.formErrors);
-		return Object.keys(errors).length === 0;
-	}
-
-	validateOrder(): boolean {
 		const errors: typeof this.formErrors = {};
 		if (!this.userData.address) {
 			errors.address = 'Необходимо указать адрес';
@@ -130,6 +130,13 @@ export class AppState extends Model<IProduct> {
 	getField() {
 		return this.userData.payment
 	}
+
+//Метод для заполнения полей email, phone, address, payment
+addOrderField(field: keyof IUser, value: string) {
+    this.userData[field] = value
+    this.validateContact()
+
+  }
 
 	hasProductInBasket(id: string): boolean {
 		return this.basket.some((item) => item.id === id);

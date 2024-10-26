@@ -220,22 +220,87 @@ events.on('input:error', (errors: Partial<IUser>) => {
 	order.valid = !payment && !address;
 	contacts.valid = !email && !phoneNumber;
 	order.errors = Object.values({ address, payment })
-		.filter((i) => !!i)
+		.filter(i => !!i)
 		.join('; ');
 	contacts.errors = Object.values({ phoneNumber, email })
-		.filter((i) => !!i)
+		.filter(i => !!i)
 		.join('; ');
 	order.payment = appModel.getField();
 });
 
-// событие изменения полей
-events.on(
-	'orderInput:change',
-	(data: { field: keyof IUser; value: string }) => {
-		appModel.setOrderField(data.field, data.value);
-		// console.log('appModel.userData', appModel.userData)
-	}
-);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // событие изменения полей
+// events.on(
+// 	'orderInput:change',
+// 	(data: { field: keyof IUser; value: string }) => {
+// 		appModel.setOrderField(data.field, data.value);
+// 		// console.log('appModel.userData', appModel.userData)
+// 	}
+// );
+
+
+
+// // событие отправки формы
+// events.on('order:submit', () => {
+// 	appModalPage.render({
+// 		content: contacts.render({
+// 			valid: false,
+// 			errors: [],
+// 		}),
+// 	});
+// });
+
+// events.on('contact:submit', () => {
+// 	const orderData = appModel.getUserData();
+// 	orderData.total = appModel.getTotalBasketPrice();
+
+// 	const items = appModel.getBasketId()
+
+// 	const payload: IOrderResponse = {
+// 		payment: orderData.payment,
+// 		address: orderData.address,	
+// 		email: orderData.email,
+// 		phoneNumber: orderData.phoneNumber,
+// 		total: orderData.total,
+// 		id: items
+// 	}					
+// 	api.postOrder(payload)
+// 	.then((result) => {
+// 	  console.log(payload)
+// 	  events.emit('order:success', result)
+// 	  appModel.clearBasket()
+// 	  appModelPage.counter = appModel.getCountBasket()
+// 	})
+// })
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
