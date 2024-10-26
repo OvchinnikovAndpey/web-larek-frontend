@@ -237,6 +237,7 @@ events.on(
 	}
 );
 
+
 // событие отправки формы
 events.on('order:submit', () => {
 	appModalPage.render({

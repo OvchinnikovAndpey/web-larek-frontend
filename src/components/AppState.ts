@@ -20,79 +20,62 @@ export class AppState extends Model<IProduct> {
 		};
 	}
 
+	//метод для получения данных о пользователе
 	getUserData() {
 		return this.userData;
 	}
 
+	//метод для получения списка карточек
 	productStore(cards: IProduct[]) {
 		this.items = cards;
 		this.events.emit('items:changed', { items: this.items });
 	}
-
+	//метод предпросмотра
 	setPreview(card: IProduct) {
 		this.preview = card.id;
 		this.events.emit('prepreview:change', card);
 	}
-	// Новый метод получения списка ID товаров в корзине
+	// метод получения списка ID товаров в корзине
 	getBasketId() {
 		return this.basket.map((item) => item.id);
 	}
-
+	//метод добавления в корзину
 	addBasket(id: string): void {
 		this.basket.push(this.getItemById(id));
 	}
-
+	//метод получения элемента по ID
 	getItemById(id: string): IProduct {
 		return this.items.find((item) => item.id === id);
 	}
-
+	//метод удаления из корзины
 	deleteBasket(id: string): void {
 		this.basket = this.basket.filter((item) => item.id !== id);
 	}
-
+	//метод получения списка
 	setItems(items: IProduct[]): void {
 		this.items = items;
 	}
-
+	//возвращает массив товаров в корзине
 	getBasket(): IProduct[] {
 		return this.basket;
 	}
-
+	//получает список товаров
 	getItems(): IProduct[] {
 		return this.items;
 	}
-
+	//очищает корзину
 	clearBasket() {
 		this.basket = [];
 	}
-
+	//получение общей стоимости корзины
 	getTotalBasketPrice() {
 		return this.basket.reduce((acc, item) => acc + item.price, 0);
 	}
-
+	//возвращает общее количество товаров в корзине
 	getCountBasket() {
 		return this.basket.length;
 	}
-
-	// setOrderField(field: keyof IUser, value: string): void {
-	// 	this.userData[field] = value;
-	// }
-
-	// validateContact(): boolean {
-	// 	const errors: typeof this.formErrors = {};
-
-	// 	if (!this.userData.email) {
-	// 		errors.email = 'Необходимо указать email';
-	// 	}
-
-	// 	if (!this.userData.phoneNumber) {
-	// 		errors.phoneNumber = 'Необходимо указать номер телефонf';
-	// 	}
-	// 	this.formErrors = errors;
-	// 	this.events.emit('input:error', this.formErrors);
-	// 	return Object.keys(errors).length === 0;
-	// }
-
+	//проверяет корректность контактных данных
 	validateContact(): boolean {
 		const errors: typeof this.formErrors = {};
 		if (!this.userData.address) {
@@ -111,7 +94,7 @@ export class AppState extends Model<IProduct> {
 		this.events.emit('input:error', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
-
+	//очищает данные заказа
 	clearOrder() {
 		this.userData = {
 			payment: '',
@@ -121,11 +104,11 @@ export class AppState extends Model<IProduct> {
 		};
 		this.events.emit('input:error', this.formErrors);
 	}
-
+	//получение ошибок формы
 	getFormErrors() {
 		return this.formErrors;
 	}
-
+	//получение полей
 	getField() {
 		return this.userData.payment;
 	}
@@ -135,7 +118,7 @@ export class AppState extends Model<IProduct> {
 		this.userData[field] = value;
 		this.validateContact();
 	}
-
+	//проверяет наличие товара в корзине
 	hasProductInBasket(id: string): boolean {
 		return this.basket.some((item) => item.id === id);
 	}
