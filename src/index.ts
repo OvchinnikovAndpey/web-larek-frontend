@@ -2,7 +2,7 @@ import './scss/styles.scss';
 import { AppState } from './components/AppState';
 import { LarekApi } from './components/LarekApi';
 import { Page } from './components/Page';
-import { Card, CardOnPage, CardInfo } from './components/Card';
+import { Card, CardOnPage, CardInfo, ICardAction } from './components/Card';
 import { Сontacts, Order } from './components/Order';
 
 import { EventEmitter } from './components/base/events';
@@ -17,12 +17,11 @@ import { cloneTemplate, ensureElement } from './utils/utils';
 import { IUser, IProduct, IOrderResponse } from './types';
 
 const events = new EventEmitter();
-const api = new LarekApi( API_URL, CDN_URL);
+const api = new LarekApi(API_URL, CDN_URL);
 
 events.onAll(({ eventName, data }) => {
-    console.log(eventName, data);
-})
-
+	console.log(eventName, data);
+});
 
 // Темплейты
 // Этот порядок отражает последовательность действий пользователя на сайте:
@@ -30,7 +29,8 @@ events.onAll(({ eventName, data }) => {
 // оформление заказа, ввод контактной информации и получение подтверждения успешного заказа.
 
 const catalogCardTemplate = ensureElement<HTMLTemplateElement>('#card-catalog'); //Каталог карточек
-const productPreviewTemplate =ensureElement<HTMLTemplateElement>('#card-preview'); //Предпросмотр продукта
+const productPreviewTemplate =
+	ensureElement<HTMLTemplateElement>('#card-preview'); //Предпросмотр продукта
 const basketItemTemplate = ensureElement<HTMLTemplateElement>('#card-basket'); //Элементы корзины
 const basketModalTemplate = ensureElement<HTMLTemplateElement>('#basket'); //Модальное окно корзины
 const orderModalTemplate = ensureElement<HTMLTemplateElement>('#order'); //Модальное окно заказа
@@ -42,7 +42,10 @@ const appModel = new AppState({}, events);
 
 //Эти две переменные создаются для управления двумя основными компонентами приложения: страницей и модальным окном.
 const appModelPage = new Page(document.body, events);
-const appModalPage = new Modal(ensureElement<HTMLElement>('#modal-container'),events);
+const appModalPage = new Modal(
+	ensureElement<HTMLElement>('#modal-container'),
+	events
+);
 
 // Части, которые переиспользуются в компонентах интерфейса
 const basket = new Basket(
@@ -60,47 +63,25 @@ const order = new Order(
 
 //Бизнес-логика приложения
 
-// api.getProducts()
-//   .then(appModel.productStore.bind(appModel))
-//   .catch(err => {
-//     console.log(err)
-//   })
-
 // Получение списка карточек
-api.getProducts()
-    .then((data) => {
-        if (data) {
-            appModel.productStore(data);
-        } else {
-            console.log('Ошибка получения карточек: данные не были получены');
-        }
-    })
-    .catch((err) => console.log('Ошибка получения карточек:', err));
+api
+	.getProducts()
+	.then((data) => {
+		if (data) {
+			appModel.productStore(data);
+		} else {
+			console.log('Ошибка получения карточек: данные не были получены');
+		}
+	})
+	.catch((err) => console.log('Ошибка получения карточек:', err));
 
-
-	
-// api.getProducts()
-//   .then((data) => {
-//     console.log('Ответ от сервера:', data);
-//     console.log('Тип ответа:', typeof data);
-//     if (typeof data === 'object' && data !== null) {
-//       console.log('Данные являются объектом');
-//       console.log('Свойства объекта:', Object.keys(data));
-//     } else {
-//       console.log('Данные не являются объектом');
-//     }
-//   })
-//   .catch((error) => {
-//     console.error('Ошибка:', error);
-//   });
-
-	
-// console.log(appModel.getItems());
-
+// Вывод списка карточек в каталоге
 events.on('items:changed', () => {
 	appModelPage.catalog = appModel.getItems().map((item) => {
 		const card = new CardOnPage(cloneTemplate(catalogCardTemplate), {
 			onClick: () => events.emit('card:selected', item),
+			price: item.price,
+			title: item.title,
 		});
 		return card.render({
 			id: item.id,
@@ -111,6 +92,130 @@ events.on('items:changed', () => {
 		});
 	});
 });
+
+//Событие Открытия предпросмотра карточек
+events.on('card:selected', (item: IProduct) => {
+	appModel.setPreview(item);
+});
+
+// отображение предпросмотра карточки
+events.on('prepreview:change', (item: IProduct) => {
+	const productInBasket = appModel.hasProductInBasket(item.id); //Проверка наличия продукта в корзине
+	const cardPreview = new CardInfo(cloneTemplate(productPreviewTemplate), {
+		onClick: () => {
+			if (productInBasket) {
+				events.emit('delete:basket', item);
+			} else {
+				events.emit('add:basket', item);
+			}
+		},
+		price: item.price,
+		title: item.title,
+	} as ICardAction);
+
+	appModalPage.render({
+		content: cardPreview.render({
+			id: item.id,
+			title: item.title,
+			price: item.price,
+			category: item.category,
+			image: item.image,
+			description: item.description,
+			button: productInBasket ? 'Удалить из корзины' : 'В корзину',
+		}),
+	});
+});
+
+//Событие добавления в корзину
+events.on('add:basket', (item: IProduct) => {
+	appModel.addBasket(item.id);
+	appModelPage.counter = appModel.getCountBasket();
+	appModalPage.close();
+	// console.log('корзина', appModel.getBasket());
+});
+
+// Открытие корзины в модальном окне
+
+events.on('basket:open', () => {
+	let i = 1;
+	const basketList = appModel.getBasket().map((item) => {
+		const card = new Card(cloneTemplate(basketItemTemplate), {
+			price: item.price,
+			title: item.title,
+			onClick: () => events.emit('basket:remove', item),
+		});
+		return card.render({
+			price: item.price,
+			title: item.title,
+			index: i++,
+		});
+	});
+	appModalPage.render({
+		content: basket.render({
+			list: basketList,
+			total: appModel.getTotalBasketPrice(),
+		}),
+	});
+});
+
+//Проверка коззины на наличие продукта и его стоимости
+// console.log('Корзина:', appModel.getBasket());
+// console.log('Общая стоимость корзины:', appModel.getTotalBasketPrice());
+
+//Событие удаления из корзины
+events.on('basket:remove', (item: IProduct) => {
+	appModel.deleteBasket(item.id);
+	appModelPage.counter = appModel.getCountBasket();
+	let i=1
+	const basketList = appModel.getBasket().map((item) => {
+		const card = new Card(cloneTemplate(basketItemTemplate), {
+			price: item.price,
+			title: item.title,
+			onClick: () => events.emit('basket:remove', item),
+		});
+		return card.render({
+			price: item.price,
+			title: item.title,
+			index: i++,
+		});
+	});
+	appModalPage.render({
+		content: basket.render({
+			list: basketList,
+			total: appModel.getTotalBasketPrice(),
+		}),
+	})
+	
+	// console.log('корзина', appModel.getBasket());
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

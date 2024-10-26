@@ -86,8 +86,8 @@ export interface IOrderForm {
 // Корзина с количеством заказа
 
 export interface IOrderData {
-	items: IProduct[]; // Массив карточек в корзине
-	totalamount: number; // Общая стоимость заказа
+	list: HTMLElement[]; // Массив карточек в корзине
+	total: number; // Общая стоимость заказа
 }
 
 // Данные о заказе

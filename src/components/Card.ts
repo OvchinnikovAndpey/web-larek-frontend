@@ -2,8 +2,11 @@ import { IProduct } from '../types';
 import { ensureElement } from '../utils/utils';
 import { Component } from './base/Component';
 
-interface ICardAction {
+export interface ICardAction {
 	onClick: (event: MouseEvent) => void;
+	price: number | null;
+	title: string;
+	index?: number;
 }
 
 // Класс Card является базовым классом для карточек, который наследуется от класса Component и имеет тип параметра IProduct.
@@ -18,7 +21,7 @@ export class Card extends Component<IProduct> {
 		this._title = ensureElement<HTMLElement>('.card__title', container);
 		this._price = ensureElement<HTMLElement>('.card__price', container);
 		this._button = container.querySelector('.card__button');
-    	this._index = container.querySelector('.basket__item-index');
+		this._index = container.querySelector('.basket__item-index');
 
 		if (action?.onClick) {
 			if (this._button) {
@@ -29,6 +32,14 @@ export class Card extends Component<IProduct> {
 		}
 	}
 
+	set index(value: number) {
+		this.setText(this._index, value);
+	}
+	set button(value: string) {
+		if (this._button) {
+			this._button.textContent = value;
+		}
+	}
 	set id(value: string) {
 		this.container.dataset.id = value;
 	}
