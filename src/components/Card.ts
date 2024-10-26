@@ -62,7 +62,10 @@ export class CardOnPage extends Card {
 	_image: HTMLImageElement;
 	_category: HTMLElement;
 
-	constructor(container: HTMLElement, action?: ICardAction) {
+	constructor(
+		container: HTMLElement, 
+		action?: ICardAction
+	) {
 		super(container, action);
 
 		this._image = ensureElement<HTMLImageElement>('.card__image', container);

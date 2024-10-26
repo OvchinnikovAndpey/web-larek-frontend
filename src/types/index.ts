@@ -62,7 +62,7 @@ export interface IAppState {
 
 	getItems(): void; //Метод получения id товаров к корзине
 
-	setOrderField(field: keyof IOrderForm, value: string): void; //Метод заполнения полей ввода: мыло, телефон, адресс, способ оплаты
+	setOrderField(field: keyof IUser, value: string): void; //Метод заполнения полей ввода: мыло, телефон, адресс, способ оплаты
 
 	validateContact(): boolean; //Валидация формы контактов
 
@@ -102,8 +102,8 @@ export interface IOrderData {
 }
 
 // Данные о заказе
-export interface IOrderResponse {
-	id: string; // Идентификатор заказа
+export interface IOrderResponse extends IUser {
+	id: string[]; // Идентификатор заказа
 }
 
 // Интерфейс для валидации форм

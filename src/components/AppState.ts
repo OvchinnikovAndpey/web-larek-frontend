@@ -20,6 +20,10 @@ export class AppState extends Model<IProduct> {
 		};
 	}
 
+	getUserData() {
+		return this.userData;
+	}
+
 	productStore(cards: IProduct[]) {
 		this.items = cards;
 		this.events.emit('items:changed', { items: this.items });
@@ -29,6 +33,10 @@ export class AppState extends Model<IProduct> {
 		this.preview = card.id;
 		this.events.emit('prepreview:change', card);
 	}
+// Новый метод получения списка ID товаров в корзине
+	getBasketId() {
+		return this.basket.map(item => item.id)
+	  }
 
 	addBasket(id: string): void {
 		this.basket.push(this.getItemById(id));
@@ -93,6 +101,12 @@ export class AppState extends Model<IProduct> {
 		if (!this.userData.payment) {
 			errors.payment = 'Необходимо указать способ оплаты';
 		}
+		if(!this.userData.email){
+			errors.email = 'Необходимо указать email'
+		}
+		if(!this.userData.phoneNumber){
+			errors.phoneNumber = 'Необходимо указать номер телефона'
+		}
 		this.formErrors = errors;
 		this.events.emit('input:error', this.formErrors);
 		return Object.keys(errors).length === 0;
@@ -112,9 +126,10 @@ export class AppState extends Model<IProduct> {
 		return this.formErrors;
 	}
 
+	
 	getField() {
 		return this.userData.payment
-	  }
+	}
 
 	hasProductInBasket(id: string): boolean {
 		return this.basket.some((item) => item.id === id);

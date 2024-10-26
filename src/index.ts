@@ -33,7 +33,8 @@ events.onAll(({ eventName, data }) => {
 // оформление заказа, ввод контактной информации и получение подтверждения успешного заказа.
 
 const catalogCardTemplate = ensureElement<HTMLTemplateElement>('#card-catalog'); //Каталог карточек
-const productPreviewTemplate =ensureElement<HTMLTemplateElement>('#card-preview'); //Предпросмотр продукта
+const productPreviewTemplate =
+	ensureElement<HTMLTemplateElement>('#card-preview'); //Предпросмотр продукта
 const basketItemTemplate = ensureElement<HTMLTemplateElement>('#card-basket'); //Элементы корзины
 const basketModalTemplate = ensureElement<HTMLTemplateElement>('#basket'); //Модальное окно корзины
 const orderModalTemplate = ensureElement<HTMLTemplateElement>('#order'); //Модальное окно заказа
@@ -117,7 +118,7 @@ events.on('prepreview:change', (item: IProduct) => {
 	const cardPreview = new CardInfo(cloneTemplate(productPreviewTemplate), {
 		onClick: () => {
 			if (productInBasket) {
-				events.emit('delete:basket', item);
+				events.emit('basket:remove', item);
 			} else {
 				events.emit('add:basket', item);
 			}
@@ -213,7 +214,8 @@ events.on('basket:toOrder', () => {
 	});
 });
 
-events.on('error:changed', (errors: Partial<IUser>) => {
+
+events.on('input:error', (errors: Partial<IUser>) => {
 	const { payment, address, email, phoneNumber } = errors;
 	order.valid = !payment && !address;
 	contacts.valid = !email && !phoneNumber;
@@ -226,7 +228,7 @@ events.on('error:changed', (errors: Partial<IUser>) => {
 	order.payment = appModel.getField();
 });
 
-
+// событие изменения полей
 events.on(
 	'orderInput:change',
 	(data: { field: keyof IUser; value: string }) => {
@@ -234,36 +236,6 @@ events.on(
 		// console.log('appModel.userData', appModel.userData)
 	}
 );
-
-
-events.on('order:submit', () => {
-	appModalPage.render({
-	  content: contacts.render(
-		{
-		  valid: false,
-		  errors: []
-		}
-	  ),
-	})
-  })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
