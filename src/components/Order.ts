@@ -15,7 +15,7 @@ export class Order extends Form<IUser> {
 			container
 		);
 		this.btnCard = ensureElement<HTMLButtonElement>(
-			'.button_alt[name=cash]',
+			'.button_alt[name=card]',
 			container
 		);
 
