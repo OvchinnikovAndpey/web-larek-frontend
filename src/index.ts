@@ -22,10 +22,6 @@ const events = new EventEmitter();
 // API
 const api = new LarekApi(API_URL, CDN_URL);
 
-// Состояние приложения
-// events.onAll(({ eventName, data }) => {
-// 	console.log(eventName, data);
-// });
 
 // Темплейты
 // Этот порядок отражает последовательность действий пользователя на сайте:
@@ -270,6 +266,7 @@ events.on('contacts:submit', () => {
 	});
 });
 
+// событие успешного оформления заказа
 events.on('order:success', (result: ISucces) => {
 	const success = new Success(cloneTemplate(successModalTemplate), {
 		onClick: () => {

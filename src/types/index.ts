@@ -1,9 +1,10 @@
 // Тип, по которому будет определяться, какую ошибку вывести в конкретную форму
 export type FormErrors = Partial<Record<keyof IUser, string>>;
 
-// метод определения типа оплаты
+//  тип,  определения типа оплаты
 export type PaymentMethod = 'cash' | 'online' | null;
 
+// тип категории товаров
 export type CategoryType =
 	| 'другое'
 	| 'софт-скил'
