@@ -22,7 +22,6 @@ const events = new EventEmitter();
 // API
 const api = new LarekApi(API_URL, CDN_URL);
 
-
 // Темплейты
 // Этот порядок отражает последовательность действий пользователя на сайте:
 // каталог, предпросмотр каталога, предпросмотр продукта, добавление в корзину,
@@ -60,6 +59,12 @@ const order = new Order(
 	cloneTemplate<HTMLFormElement>(orderModalTemplate),
 	events
 ); //Модальное окно заказа
+
+const success = new Success(cloneTemplate(successModalTemplate), {
+	onClick: () => {
+		appModalPage.close();
+	},
+});
 
 //Бизнес-логика приложения
 
@@ -168,10 +173,6 @@ events.on('basket:open', () => {
 	});
 });
 
-//Проверка коззины на наличие продукта и его стоимости
-// console.log('Корзина:', appModel.getBasket());
-// console.log('Общая стоимость корзины:', appModel.getTotalBasketPrice());
-
 //Событие удаления из корзины
 events.on('basket:remove', (item: IProduct) => {
 	appModel.deleteBasket(item.id);
@@ -189,17 +190,16 @@ events.on('basket:remove', (item: IProduct) => {
 			index: i++,
 		});
 	});
-	appModalPage.render({
-		content: basket.render({
-			list: basketList,
-			total: appModel.getTotalBasketPrice(),
-		}),
-	});
-	// console.log('корзина', appModel.getBasket());
 });
+	// console.log('корзина', appModel.getBasket());
 
 // событие открытия оформления заказа
 events.on('basket:toOrder', () => {
+	// Очистка форм и данных перед началом оформления нового заказа
+	order.clear();
+	contacts.clear();
+	appModel.clearOrderData();
+
 	appModalPage.render({
 		content: order.render({
 			valid: false,
@@ -233,7 +233,6 @@ events.on(
 	}
 );
 
-
 // событие отправки формы
 events.on('order:submit', () => {
 	appModalPage.render({
@@ -259,81 +258,29 @@ events.on('contacts:submit', () => {
 		total: orderData.total,
 		items: items,
 	};
-	api.postOrder(payload).then((result) => {
-		events.emit('order:success', result);
-		appModel.clearBasket();
-		appModelPage.counter = appModel.getCountBasket();
-	});
+	api
+		.postOrder(payload)
+		.then((result) => {
+			events.emit('order:success', result);
+			appModel.clearBasket();
+			appModelPage.counter = appModel.getCountBasket();
+		})
+		.catch((error) => {
+			console.error('Ошибка отправки заказа:', error);
+		});
 });
 
 // событие успешного оформления заказа
 events.on('order:success', (result: ISucces) => {
-	const success = new Success(cloneTemplate(successModalTemplate), {
-		onClick: () => {
-			appModalPage.close();
-			order.disableButtons();
-		},
-	});
-
+	// console.log('Ответ сервера:', result);
 	appModalPage.render({
 		content: success.render({
-			total: appModel.getTotalBasketPrice(),
+			total: result.total,
 		}),
 	});
+	// Очистка форм и данных после оформления заказа
+	order.clear();
+	contacts.clear();
+	appModel.clearOrderData();
+	appModel.clearBasket();
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Для проверки работоспособности модели данных приложения
-// const event = new EventEmitter()
-
-// const appState = new AppState({}, event)
-
-// const initialItems: IProduct[] = [
-//     {
-//         id: '1',
-//         title: 'Product 1',
-//         category: 'Category 1',
-//         image: 'image.png',
-//         description: 'Description 1',
-//         price: 1000
-//     },
-
-//     {
-//         id: '2',
-//         title: 'Product 2',
-//         category: 'Category 2',
-//         image: 'image.png',
-//         description: 'Description 2',
-//         price: 2000
-//     },
-// ]
-
-// appState.setItems(initialItems);
-
-// appState.addBasket('2');
-// appState.addBasket('1');
-
-// console.log('корзина', appState.getBasket());
-// console.log('количество товаров в корзине', appState.getCountBasket());
-// console.log('сумма корзины', appState.getTotalBasketPrice());

@@ -39,18 +39,29 @@ export class AppState extends Model<IProduct> {
 	getBasketId() {
 		return this.basket.map((item) => item.id);
 	}
-	//метод добавления в корзину
-	addBasket(id: string): void {
-		this.basket.push(this.getItemById(id));
-	}
+	
 	//метод получения элемента по ID
 	getItemById(id: string): IProduct {
 		return this.items.find((item) => item.id === id);
 	}
+	
+	//метод добавления в корзину
+	addBasket(id: string): void {
+		this.basket.push(this.getItemById(id));
+		this.events.emit('basket:change', this.basket);
+	}
+	
 	//метод удаления из корзины
 	deleteBasket(id: string): void {
 		this.basket = this.basket.filter((item) => item.id !== id);
+		this.events.emit('basket:change', this.basket);
 	}
+
+	//  Очистка корзины
+    clearBasket() {
+        this.basket = [];
+        this.events.emit('basket:change', this.basket);
+    }
 	//метод получения списка
 	setItems(items: IProduct[]): void {
 		this.items = items;
@@ -63,10 +74,7 @@ export class AppState extends Model<IProduct> {
 	getItems(): IProduct[] {
 		return this.items;
 	}
-	//очищает корзину
-	clearBasket() {
-		this.basket = [];
-	}
+
 	//получение общей стоимости корзины
 	getTotalBasketPrice() {
 		return this.basket.reduce((acc, item) => acc + item.price, 0);
@@ -122,4 +130,15 @@ export class AppState extends Model<IProduct> {
 	hasProductInBasket(id: string): boolean {
 		return this.basket.some((item) => item.id === id);
 	}
+// Очистка данных о заказе
+	clearOrderData() {
+        this.userData = {
+            payment: '',
+            address: '',
+            email: '',
+            phone: '',
+        };
+        this.formErrors = {};
+        this.events.emit('input:error', this.formErrors);
+    }
 }

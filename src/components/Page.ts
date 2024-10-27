@@ -22,6 +22,7 @@ export class Page extends Component<IPage> {
 		this.gallery = ensureElement<HTMLElement>('.gallery');
 		this.pageWrapper = ensureElement<HTMLElement>('.page__wrapper');
 		this.hdrBasket = ensureElement<HTMLElement>('.header__basket');
+		this.hdrBasketCounter = ensureElement<HTMLElement>('.header__basket-counter')
 
 		this.hdrBasket.addEventListener('click', () => {
 			this.events.emit('basket:open');
@@ -36,6 +37,11 @@ export class Page extends Component<IPage> {
 	set catalog(items: HTMLElement[]) {
 		this.gallery.replaceChildren(...items);
 	}
+
+	set basketList(items: HTMLElement[]) {
+		// you can add custom logic here if needed
+		this.basketList = items;
+	  }
 
 	// Установить состояние блокировки страницы.
 	set locked(value: boolean) {

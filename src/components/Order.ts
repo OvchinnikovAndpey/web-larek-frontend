@@ -42,6 +42,11 @@ export class Order extends Form<IUser> {
 			value;
 		this.changesInForm('address', value);
 	}
+
+	clear() {
+        this.payment = null;
+        this.address = '';
+    }
 }
 // Класс Contacts предназначен для отображения формы контактов
 export class Сontacts extends Form<IUser> {
@@ -56,4 +61,9 @@ export class Сontacts extends Form<IUser> {
 		(this.container.elements.namedItem('email') as HTMLInputElement).value =
 			value;
 	}
+
+	clear() {
+        this.phone = '';
+        this.email = '';
+    }
 }
