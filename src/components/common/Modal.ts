@@ -27,7 +27,6 @@ protected _content: HTMLElement
   }
 
   open() {
-    console.trace('open')
     this.container.classList.add('modal_active')
     this.events.emit('modal:open')
   }
@@ -39,7 +38,6 @@ protected _content: HTMLElement
   }
 
   render(data: IModal): HTMLElement {
-    console.trace('render', data)
     super.render(data)
     this.open()
     return this.container

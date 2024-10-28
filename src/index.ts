@@ -2,8 +2,8 @@ import './scss/styles.scss';
 import { AppState } from './components/AppState';
 import { LarekApi } from './components/LarekApi';
 import { Page } from './components/Page';
-import { Card, CardOnPage, CardInfo, ICardAction } from './components/Card';
-import { Сontacts, Order } from './components/Order';
+import { Card, CardInfo, CardOnPage, ICardAction } from './components/Card';
+import { Contacts, Order } from './components/Order';
 
 import { EventEmitter } from './components/base/events';
 
@@ -14,7 +14,7 @@ import { ISucces, Success } from './components/common/Success';
 import { API_URL, CDN_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 
-import { IUser, IProduct, IOrderResponse, CategoryType } from './types';
+import { CategoryType, IOrderResponse, IProduct, IUser } from './types';
 
 // События
 const events = new EventEmitter();
@@ -51,7 +51,7 @@ const basket = new Basket(
 	cloneTemplate<HTMLTemplateElement>(basketModalTemplate),
 	events
 ); //Модальное окно корзины
-const contacts = new Сontacts(
+const contacts = new Contacts(
 	cloneTemplate<HTMLFormElement>(contactsModalTemplate),
 	events
 ); // Модальное окно контактов
@@ -121,8 +121,9 @@ events.on('prepreview:change', (item: IProduct) => {
 			if (productInBasket) {
 				events.emit('basket:remove', item);
 			} else {
-				events.emit('add:basket', item);
+				events.emit('basket:add', item);
 			}
+			appModalPage.close();
 		},
 		price: item.price,
 		title: item.title,
@@ -141,61 +142,11 @@ events.on('prepreview:change', (item: IProduct) => {
 	});
 });
 
-// //Событие добавления в корзину
-// events.on('add:basket', (item: IProduct) => {
-// 	appModel.addBasket(item.id);
-// 	appModelPage.counter = appModel.getCountBasket();
-// 	appModalPage.close();
-// 	// console.log('корзина', appModel.getBasket());
-// });
-
-// // Открытие корзины в модальном окне
-
-// events.on('basket:open', () => {
-// 	let i = 1;
-// 	const basketList = appModel.getBasket().map((item) => {
-// 		const card = new Card(cloneTemplate(basketItemTemplate), {
-// 			price: item.price,
-// 			title: item.title,
-// 			onClick: () => events.emit('basket:remove', item),
-// 		});
-// 		return card.render({
-// 			price: item.price,
-// 			title: item.title,
-// 			index: i++,
-// 		});
-// 	});
-// 	appModalPage.render({
-// 		content: basket.render({
-// 			list: basketList,
-// 			total: appModel.getTotalBasketPrice(),
-// 		}),
-// 	});
-// });
-
-// //Событие удаления из корзины
-// events.on('basket:remove', (item: IProduct) => {
-// 	appModel.deleteBasket(item.id);
-// 	appModelPage.counter = appModel.getCountBasket();
-// 	let i = 1;
-// 	const basketList = appModel.getBasket().map((item) => {
-// 		const card = new Card(cloneTemplate(basketItemTemplate), {
-// 			price: item.price,
-// 			title: item.title,
-// 			onClick: () => events.emit('basket:remove', item),
-// 		});
-// 		return card.render({
-// 			price: item.price,
-// 			title: item.title,
-// 			index: i++,
-// 		});
-// 	});
-// });
-
 // Событие изменения корзины
 events.on('basket:change', () => {
 	appModelPage.counter = appModel.getCountBasket();
-	const basketList = appModel.getBasket().map((item, index) => {
+	basket.total = appModel.getTotalBasketPrice();
+	basket.list = appModel.getBasket().map((item, index) => {
 		const card = new Card(cloneTemplate(basketItemTemplate), {
 			price: item.price,
 			title: item.title,
@@ -207,34 +158,25 @@ events.on('basket:change', () => {
 			index: index + 1,
 		});
 	});
-	appModalPage.render({
-		content: basket.render({
-			list: basketList,
-			total: appModel.getTotalBasketPrice(),
-		}),
-	});
 });
 
 // Добавление товара в корзину
-events.on('add:basket', (item: IProduct) => {
+events.on('basket:add', (item: IProduct) => {
 	appModel.addBasket(item.id);
-	appModalPage.close();
+	events.emit('basket:change');
 });
 
 // Удаление товара из корзины
 events.on('basket:remove', (item: IProduct) => {
-    appModel.deleteBasket(item.id);
-
+	appModel.deleteBasket(item.id);
+	events.emit('basket:change');
 });
-
 
 // Открытие корзины
 events.on('basket:open', () => {
-	console.trace('Открытие корзины');
 	appModalPage.render({
-		content: basket.render({
-		}),
-	})
+		content: basket.render({}),
+	});
 });
 
 // console.log('корзина', appModel.getBasket());
@@ -318,7 +260,6 @@ events.on('contacts:submit', () => {
 
 // событие успешного оформления заказа
 events.on('order:success', (result: ISucces) => {
-	console.log('Событие успешного оформления заказа:', result);
 	appModalPage.render({
 		content: success.render({
 			total: result.total,

@@ -49,7 +49,7 @@ export class Order extends Form<IUser> {
     }
 }
 // Класс Contacts предназначен для отображения формы контактов
-export class Сontacts extends Form<IUser> {
+export class Contacts extends Form<IUser> {
 	constructor(container: HTMLFormElement, events: IEvents) {
 		super(container, events);
 	}
