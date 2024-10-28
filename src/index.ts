@@ -141,56 +141,102 @@ events.on('prepreview:change', (item: IProduct) => {
 	});
 });
 
-//Событие добавления в корзину
-events.on('add:basket', (item: IProduct) => {
-	appModel.addBasket(item.id);
-	appModelPage.counter = appModel.getCountBasket();
-	appModalPage.close();
-	// console.log('корзина', appModel.getBasket());
-});
+// //Событие добавления в корзину
+// events.on('add:basket', (item: IProduct) => {
+// 	appModel.addBasket(item.id);
+// 	appModelPage.counter = appModel.getCountBasket();
+// 	appModalPage.close();
+// 	// console.log('корзина', appModel.getBasket());
+// });
 
-// Открытие корзины в модальном окне
+// // Открытие корзины в модальном окне
 
-events.on('basket:open', () => {
+// events.on('basket:open', () => {
+// 	let i = 1;
+// 	const basketList = appModel.getBasket().map((item) => {
+// 		const card = new Card(cloneTemplate(basketItemTemplate), {
+// 			price: item.price,
+// 			title: item.title,
+// 			onClick: () => events.emit('basket:remove', item),
+// 		});
+// 		return card.render({
+// 			price: item.price,
+// 			title: item.title,
+// 			index: i++,
+// 		});
+// 	});
+// 	appModalPage.render({
+// 		content: basket.render({
+// 			list: basketList,
+// 			total: appModel.getTotalBasketPrice(),
+// 		}),
+// 	});
+// });
+
+// //Событие удаления из корзины
+// events.on('basket:remove', (item: IProduct) => {
+// 	appModel.deleteBasket(item.id);
+// 	appModelPage.counter = appModel.getCountBasket();
+// 	let i = 1;
+// 	const basketList = appModel.getBasket().map((item) => {
+// 		const card = new Card(cloneTemplate(basketItemTemplate), {
+// 			price: item.price,
+// 			title: item.title,
+// 			onClick: () => events.emit('basket:remove', item),
+// 		});
+// 		return card.render({
+// 			price: item.price,
+// 			title: item.title,
+// 			index: i++,
+// 		});
+// 	});
+// });
+
+// Событие изменения корзины
+events.on('basket:change', () => {
 	let i = 1;
 	const basketList = appModel.getBasket().map((item) => {
-		const card = new Card(cloneTemplate(basketItemTemplate), {
-			price: item.price,
-			title: item.title,
-			onClick: () => events.emit('basket:remove', item),
-		});
-		return card.render({
-			price: item.price,
-			title: item.title,
-			index: i++,
-		});
+	  const card = new Card(cloneTemplate(basketItemTemplate), {
+		price: item.price,
+		title: item.title,
+		onClick: () => events.emit('basket:remove', item),
+	  });
+	  return card.render({
+		price: item.price,
+		title: item.title,
+		index: i++,
+	  });
 	});
 	appModalPage.render({
-		content: basket.render({
-			list: basketList,
-			total: appModel.getTotalBasketPrice(),
-		}),
+	  content: basket.render({
+		list: basketList,
+		total: appModel.getTotalBasketPrice(),
+	  }),
 	});
-});
-
-//Событие удаления из корзины
-events.on('basket:remove', (item: IProduct) => {
+  });
+  
+// Добавление товара в корзину
+  events.on('add:basket', (item: IProduct) => {
+	appModel.addBasket(item.id);
+	appModelPage.counter = appModel.getCountBasket();
+	events.emit('basket:change');
+	appModalPage.close();
+  });  
+ 
+  // Удаление товара из корзины
+  events.on('basket:remove', (item: IProduct) => {
 	appModel.deleteBasket(item.id);
 	appModelPage.counter = appModel.getCountBasket();
-	let i = 1;
-	const basketList = appModel.getBasket().map((item) => {
-		const card = new Card(cloneTemplate(basketItemTemplate), {
-			price: item.price,
-			title: item.title,
-			onClick: () => events.emit('basket:remove', item),
-		});
-		return card.render({
-			price: item.price,
-			title: item.title,
-			index: i++,
-		});
-	});
-});
+	events.emit('basket:change');
+	appModalPage.close();
+  });
+  
+  
+  
+  // Открытие корзины
+  events.on('basket:open', () => {
+	events.emit('basket:change');
+  });
 	// console.log('корзина', appModel.getBasket());
 
 // событие открытия оформления заказа
@@ -272,7 +318,7 @@ events.on('contacts:submit', () => {
 
 // событие успешного оформления заказа
 events.on('order:success', (result: ISucces) => {
-	// console.log('Ответ сервера:', result);
+	console.log('Событие успешного оформления заказа:', result);
 	appModalPage.render({
 		content: success.render({
 			total: result.total,
